@@ -98,6 +98,8 @@
                 </div>
             </div>
         </div>
+            <asp:Button ID="btnMostrarCategorias" runat="server" Text="Mostrar Categorías" OnClientClick="mostrarCategoriasEnConsola(); return false;" class="btn btn-primary" />
+
         <!-- Modal para Modificar Registro -->
         <div class="modal fade" id="modalModificar" tabindex="-1" role="dialog" aria-labelledby="modalModificarLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -134,10 +136,27 @@
             </asp:Table>
         </div>
     </form>
+    <script type="text/javascript">
+        function mostrarCategoriasEnConsola() {
+            // Realiza una solicitud para obtener las categorías desde el servidor.
+            fetch('http://localhost:50912/Categorias/ObtenerCategorias')
+                .then(response => response.json())
+                .then(data => {
+                    // Muestra las categorías en la consola.
+                    console.log('Categorías:');
+                    data.forEach(categoria => {
+                        console.log(categoria);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error al obtener categorías:', error);
+                });
+        }
+    </script>
 <script>
     async function cargarDatosDesdeControlador() {
         try {
-            const response = await fetch('Categorias/ObtenerCategorias');
+            const response = await fetch('http://localhost:50912/Categorias/ObtenerCategorias');
             if (response.ok) {
                 const data = await response.json();
                 const tabla = document.getElementById('tablaCategorias');
@@ -266,7 +285,7 @@
                     cellAcciones.appendChild(btnModificar);
                 });
             } else {
-                console.error('Error al cargar datos desde la API');
+                console.error('Error al cargar datos desde Controlador');
             }
         } catch (error) {
             console.error('Error inesperado: ' + error.message);
